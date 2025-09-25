@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.paparazzi)
 }
 
 android {
@@ -30,14 +31,28 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    testOptions {
+        unitTests {
+            // Removing this seems to make the issue disappear in this simple example
+            isIncludeAndroidResources = true
+        }
+    }
+}
+
+tasks.withType<Test>().configureEach {
+    // always re-run tests
+    outputs.upToDateWhen { false }
+    // Fork for every test class (this will make the tests succeed)
+    // forkEvery = 1
+}
+
+// Disable unnecessary release build type
+androidComponents {
+    beforeVariants(selector().withBuildType("release")) { it.enable = false }
 }
 
 dependencies {
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }
