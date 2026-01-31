@@ -1,6 +1,7 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.paparazzi)
 }
 
@@ -28,14 +29,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     testOptions {
         unitTests {
             // Removing this seems to make the issue disappear in this simple example
             isIncludeAndroidResources = true
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
@@ -54,5 +58,4 @@ androidComponents {
 dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
-    androidTestImplementation(libs.androidx.junit)
 }
